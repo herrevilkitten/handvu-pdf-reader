@@ -1,20 +1,11 @@
 package cs6456.project;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import org.icepdf.ri.common.SwingController;
-import org.icepdf.ri.common.SwingViewBuilder;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-import org.opencv.highgui.VideoCapture;
+import cs6456.project.cv.CameraEventDispatcher;
+import cs6456.project.cv.CameraInputThread;
+import cs6456.project.cv.CameraOutputPanel;
 
-import cs6456.project.pdf.GesturesPdfViewBuilder;
 
 
 public class Main {
@@ -24,36 +15,21 @@ public class Main {
     System.out.println("Hello, OpenCV");
     // Load the native library.
     System.loadLibrary("opencv_java246_x64");
-
-    VideoCapture camera = new VideoCapture(0);
-    Thread.sleep(1000);
-    camera.open(0); //Useless
-    if(!camera.isOpened()){
-        System.out.println("Camera Error");
-    }
-    else{
-        System.out.println("Camera OK?");
-    }
-
-    Mat frame = new Mat();
-
-    //camera.grab();
-    //System.out.println("Frame Grabbed");
-    //camera.retrieve(frame);
-    //System.out.println("Frame Decoded");
-
-    camera.read(frame);
-    System.out.println("Frame Obtained");
-
-    /* No difference
-    camera.release();
-    */
-
-    System.out.println("Captured Frame Width " + frame.width());
-
-    Highgui.imwrite("camera.jpg", frame);
-    System.out.println("OK");
     
+    CameraEventDispatcher dispatcher = new CameraEventDispatcher();
+    CameraInputThread cameraThread = new CameraInputThread(dispatcher, 10);
+    
+    cameraThread.start();
+    CameraOutputPanel panel = new CameraOutputPanel();
+    dispatcher.addImageFrameReadListener(panel);
+    
+    JFrame frame = new JFrame("Camera Demo");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(450, 450);
+    frame.setContentPane(panel);
+    frame.setVisible(true);
+    
+	/*
     // Get a file from the command line to open
 		String filePath = "samples/16-Bit Adventures.pdf";
 
@@ -117,6 +93,6 @@ public class Main {
 		// show the component
 		applicationFrame.pack();
 		applicationFrame.setVisible(true);
-		
+		*/
 	}
 }
