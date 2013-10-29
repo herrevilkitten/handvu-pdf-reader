@@ -1,13 +1,15 @@
-package cs6456.project.cv;
+package cs6456.project.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import cs6456.project.cv.ImageFrameReadEvent;
+import cs6456.project.cv.ImageFrameReadListener;
 import cs6456.project.util.CVUtil;
 
-public class CameraOutputPanel extends JPanel implements ImageFrameReadListener {
+public class CameraPanel extends JPanel implements ImageFrameReadListener {
 	/**
 	 * 
 	 */
@@ -15,7 +17,7 @@ public class CameraOutputPanel extends JPanel implements ImageFrameReadListener 
 	
 	BufferedImage background = null;
 
-	public CameraOutputPanel() {
+	public CameraPanel() {
 		this.setSize(400, 400);
 	}
 
@@ -31,4 +33,5 @@ public class CameraOutputPanel extends JPanel implements ImageFrameReadListener 
 			g.drawImage(this.background, 10, 10, background.getWidth(), background.getHeight(), this);
 		}
 	}
+
 }

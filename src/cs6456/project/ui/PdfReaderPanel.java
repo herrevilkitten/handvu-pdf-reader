@@ -1,28 +1,27 @@
-package cs6456.project;
+package cs6456.project.ui;
 
-import javax.swing.SwingUtilities;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import cs6456.project.ui.GesturesFrame;
+import javax.swing.JPanel;
 
+import org.icepdf.ri.common.SwingController;
+import org.icepdf.ri.common.SwingViewBuilder;
 
+import cs6456.project.pdf.GesturesPdfViewBuilder;
 
-public class Main {
+public class PdfReaderPanel extends JPanel {
 
-	public static void main(String[] args) throws Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    // Load the native library.
-    System.loadLibrary("opencv_java246_x64");
-    
-    
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new GesturesFrame();	
-			}
-		});
-    
-	/*
-    // Get a file from the command line to open
-		String filePath = "samples/16-Bit Adventures.pdf";
+	public PdfReaderPanel() {
+		// Get a file from the command line to open
+		String filePath = "samples/05460693.pdf";
 
 		// build a component controller
 		SwingController controller = new SwingController();
@@ -34,10 +33,6 @@ public class Main {
 		// add interactive mouse link annotation support via callback
 		controller.getDocumentViewController().setAnnotationCallback(
 				new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
-
-		JFrame applicationFrame = new JFrame();
-		applicationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		applicationFrame.getContentPane().add(viewerComponentPanel);
 
 		// Now that the GUI is all in place, we can try opening a PDF
 		controller.openDocument(filePath);
@@ -81,9 +76,7 @@ public class Main {
 			}
 		});
 
-		// show the component
-		applicationFrame.pack();
-		applicationFrame.setVisible(true);
-		*/
+		add(viewerComponentPanel);
 	}
+
 }
