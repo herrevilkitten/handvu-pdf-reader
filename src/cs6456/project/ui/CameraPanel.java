@@ -19,6 +19,7 @@ public class CameraPanel extends JPanel implements ImageFrameReadListener {
 
 	public CameraPanel() {
 		this.setSize(400, 400);
+		this.setDoubleBuffered(true);
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class CameraPanel extends JPanel implements ImageFrameReadListener {
 	}
 	
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		if ( this.background != null ) {
 			g.drawImage(this.background, 10, 10, background.getWidth(), background.getHeight(), this);
 		}

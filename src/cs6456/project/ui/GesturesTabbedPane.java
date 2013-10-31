@@ -1,5 +1,6 @@
 package cs6456.project.ui;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 public class GesturesTabbedPane extends JTabbedPane {
@@ -14,11 +15,11 @@ public class GesturesTabbedPane extends JTabbedPane {
 	CameraPanel cameraPanel;
 
 	public GesturesTabbedPane() {
-		bookshelfPanel = new BookshelfPanel();
 		pdfReaderPanel = new PdfReaderPanel();
+		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController());
 		cameraPanel = new CameraPanel();
 		
-		this.addTab("Shelf", bookshelfPanel);
+		this.addTab("Shelf", new JScrollPane(bookshelfPanel));
 		this.addTab("Book", pdfReaderPanel);
 		this.addTab("Camera", cameraPanel);
 	}
