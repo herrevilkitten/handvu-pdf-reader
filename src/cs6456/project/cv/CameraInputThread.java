@@ -7,6 +7,7 @@ public class CameraInputThread extends Thread {
 	CameraEventDispatcher dispatcher;
 	int rate;
 	long sleepTime;
+	boolean running;
 	
 	public CameraInputThread(CameraEventDispatcher dispatcher, int rate) {
 		super();
@@ -14,6 +15,7 @@ public class CameraInputThread extends Thread {
 		this.dispatcher = dispatcher;
 		this.rate = rate;
 		this.sleepTime = 1000 / this.rate;
+		this.running = true;
 	}
 
 	@Override
@@ -22,8 +24,10 @@ public class CameraInputThread extends Thread {
 		VideoCapture capture = new VideoCapture(0);
 
 		try {
+			Thread.sleep(100);
+			running = true;
 			if (capture.isOpened()) {
-				while (true) {
+				while (running) {
 					capture.read(image);
 					if (!image.empty()) {
 						ImageFrameReadEvent event = new ImageFrameReadEvent(image);
@@ -37,6 +41,12 @@ public class CameraInputThread extends Thread {
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			capture.release();
 		}
+	}
+	
+	public void close() {
+		this.running = false;
 	}
 }
