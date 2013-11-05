@@ -10,9 +10,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.icepdf.ri.common.SwingController;
-
 import cs6456.project.ui.BookshelfPanel;
+import cs6456.project.ui.GesturesTabbedPane;
 import cs6456.project.ui.PdfButton;
 import cs6456.project.util.ImageUtils;
 
@@ -26,13 +25,13 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	String filename;
 	PdfButton button;
 	JLabel label;
-	SwingController controller;
+	GesturesTabbedPane tabbedPane;
 
-	public PdfButtonPanel(final String filename, final SwingController controller) {
+	public PdfButtonPanel(final String filename, GesturesTabbedPane tabbedPane) {
 		this.setLayout(new BorderLayout());
 		this.filename = filename;
 		this.button = new PdfButton("");
-		this.controller = controller;
+		this.tabbedPane = tabbedPane;
 
 		Image adobeImage = ImageUtils.getImage("/Adobe_Acrobat_Icon.jpg");
 		Icon icon = new ImageIcon(adobeImage.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
@@ -48,9 +47,10 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		controller.openDocument("bookshelf/" + filename);
+		tabbedPane.getPdfReaderPanel().openDocument("bookshelf/" + filename);
 		((BookshelfPanel) getParent()).setCurrentButton(this);
 		repaint();
+		tabbedPane.setSelectedIndex(1);
 	}
 
 	public String getFilename() {
@@ -68,13 +68,4 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	public void setButton(PdfButton button) {
 		this.button = button;
 	}
-
-	public SwingController getController() {
-		return controller;
-	}
-
-	public void setController(SwingController controller) {
-		this.controller = controller;
-	}
-
 }

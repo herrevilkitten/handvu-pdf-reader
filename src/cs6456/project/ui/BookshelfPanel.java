@@ -1,11 +1,7 @@
 package cs6456.project.ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -33,9 +29,11 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 
 	int currentButton = 0;
 	SwingController controller;
+	GesturesTabbedPane tabbedPane;
 	
-	public BookshelfPanel(SwingController controller) {
+	public BookshelfPanel(SwingController controller, GesturesTabbedPane tabbedPane) {
 		this.controller = controller;
+		this.tabbedPane = tabbedPane;
 		
 		setLayout(new GridLayout(0, 4));
 
@@ -52,7 +50,7 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 					continue;
 				}
 
-				PdfButtonPanel buttonPanel = new PdfButtonPanel(filename, controller);
+				PdfButtonPanel buttonPanel = new PdfButtonPanel(filename, tabbedPane);
 				add(buttonPanel);
 			}
 		}
@@ -117,15 +115,16 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 	
 	public PdfButtonPanel getCurrentButtonPanel() {
 		Component[] components = getComponents();
-		return (PdfButtonPanel) components[currentButton];
+		return (PdfButtonPanel) components[getCurrentButton()];
 	}
 	
 	public int getCurrentButton() {
-		return currentButton;
+		return Math.max(Math.min(currentButton, (getComponents()).length - 1), 0);
 	}
 	
 	public int changeCurrentButton(int delta) {
-		currentButton = Math.max(Math.min(currentButton + delta, (getComponents()).length), 0);
+		currentButton = Math.max(Math.min(currentButton + delta, (getComponents()).length - 1), 0);
+		this.scrollRectToVisible(getCurrentButtonPanel().getBounds());
 		return currentButton;
 	}
 

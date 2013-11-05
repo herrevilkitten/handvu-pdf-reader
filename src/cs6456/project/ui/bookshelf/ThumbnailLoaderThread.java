@@ -37,10 +37,10 @@ public class ThumbnailLoaderThread extends Thread {
 			Document pdf = new Document();
 			try {
 				pdf.setFile("bookshelf/" + filename);
-				PDimension dimensions = pdf.getPageDimension(1, 0.0f);
+				PDimension dimensions = pdf.getPageDimension(0, 0.0f);
 				float ratio = dimensions.getWidth() / dimensions.getHeight();
 				float newWidth = 200 * ratio;
-				Image thumbnail = pdf.getPageImage(1, GraphicsRenderingHints.PRINT, Page.BOUNDARY_CROPBOX, 0.0f, 1).getScaledInstance((int) newWidth, 200, Image.SCALE_DEFAULT);
+				Image thumbnail = pdf.getPageImage(0, GraphicsRenderingHints.PRINT, Page.BOUNDARY_CROPBOX, 0.0f, 1).getScaledInstance((int) newWidth, 200, Image.SCALE_DEFAULT);
 				panel.getButton().setIcon(new ImageIcon(thumbnail));
 				bookshelfPanel.repaint();
 				pdf.dispose();

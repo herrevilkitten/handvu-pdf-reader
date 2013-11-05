@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 
 import cs6456.project.cv.CameraEventDispatcher;
 import cs6456.project.cv.CameraInputThread;
+import cs6456.project.cv.HandRecognitionStateMachine;
 import cs6456.project.event.GlobalEventDispatcher;
 
 public class GesturesFrame extends JFrame {
@@ -21,8 +22,8 @@ public class GesturesFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	JLabel statusLabel = new JLabel();
-	JLabel gestureLabel = new JLabel();
+	StatusLabel statusLabel = new StatusLabel();
+	JLabel gestureLabel = new JLabel("Gesture: ");
 	
 	public GesturesFrame() {
 		setLayout(new BorderLayout());
@@ -30,9 +31,12 @@ public class GesturesFrame extends JFrame {
 		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
 
 		cameraThread.start();
+		
+		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
 
-		GesturesTabbedPane tabbedPane = new GesturesTabbedPane();
+		GesturesTabbedPane tabbedPane = new GesturesTabbedPane(statusLabel);
 		dispatcher.addImageFrameReadListener(tabbedPane.getCameraPanel());
+		dispatcher.addImageFrameReadListener(hrsm);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {

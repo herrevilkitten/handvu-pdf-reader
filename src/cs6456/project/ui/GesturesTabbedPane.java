@@ -13,10 +13,13 @@ public class GesturesTabbedPane extends JTabbedPane {
 	BookshelfPanel bookshelfPanel;
 	PdfReaderPanel pdfReaderPanel;
 	CameraPanel cameraPanel;
+	StatusLabel statusLabel;
 
-	public GesturesTabbedPane() {
-		pdfReaderPanel = new PdfReaderPanel();
-		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController());
+	public GesturesTabbedPane(StatusLabel statusLabel) {
+		this.statusLabel = statusLabel;
+		
+		pdfReaderPanel = new PdfReaderPanel(this);
+		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController(), this);
 		cameraPanel = new CameraPanel();
 		
 		this.addTab("Shelf", new JScrollPane(bookshelfPanel));
@@ -34,5 +37,9 @@ public class GesturesTabbedPane extends JTabbedPane {
 
 	public CameraPanel getCameraPanel() {
 		return cameraPanel;
+	}
+
+	public StatusLabel getStatusLabel() {
+		return statusLabel;
 	}
 }
