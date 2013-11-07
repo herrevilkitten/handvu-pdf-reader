@@ -10,7 +10,10 @@ import javax.swing.JPanel;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
 
+import cs6456.project.event.pdf.GoToBookmarkEvent;
+import cs6456.project.event.pdf.GoToBookshelfEvent;
 import cs6456.project.event.pdf.PageChangeEvent;
+import cs6456.project.event.pdf.SetBookmarkEvent;
 import cs6456.project.pdf.GesturesPdfViewBuilder;
 
 public class PdfReaderPanel extends JPanel implements cs6456.project.event.EventDispatcher {
@@ -23,8 +26,14 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 	SwingController controller;
 	SwingViewBuilder factory;
 	JPanel viewerComponentPanel;
+	GesturesTabbedPane tabbedPane;
+	
+	int bookmarkPage = 0;
+	int currentPage = 0;
 
-	public PdfReaderPanel() {
+	public PdfReaderPanel(GesturesTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+		
 		// build a component controller
 		controller = new SwingController();
 
@@ -50,6 +59,15 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 	public SwingController getController() {
 		return controller;
 	}
+	
+	public void openDocument(String document) {
+		controller.openDocument(document);
+		this.bookmarkPage = 0;
+		this.currentPage = 0;
+		this.tabbedPane.getStatusLabel().setDocument(document);
+		this.tabbedPane.getStatusLabel().setCurrentPage(1);
+		this.tabbedPane.getStatusLabel().setLastPage(controller.getDocument().getNumberOfPages());
+	}
 
 	@Override
 	public boolean dispatchEvent(EventObject event) {
@@ -62,10 +80,25 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 			KeyEvent ke = (KeyEvent) event;
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
-				hlEvent = new PageChangeEvent(event.getSource(), 1);
+				hlEvent = new PageChangeEvent(event, 1);
 				break;
 			case KeyEvent.VK_PAGE_UP:
-				hlEvent = new PageChangeEvent(event.getSource(), -1);
+				hlEvent = new PageChangeEvent(event, -1);
+				break;
+			case KeyEvent.VK_END:
+				hlEvent = new PageChangeEvent(event, controller.getDocument().getNumberOfPages() - controller.getCurrentPageNumber());
+				break;
+			case KeyEvent.VK_HOME:
+				hlEvent = new PageChangeEvent(event, -controller.getCurrentPageNumber());
+				break;
+			case KeyEvent.VK_BACK_SPACE:
+				hlEvent = new GoToBookshelfEvent(event);
+				break;
+			case KeyEvent.VK_SPACE:
+				hlEvent = new GoToBookmarkEvent(event);
+				break;
+			case KeyEvent.VK_B:
+				hlEvent = new SetBookmarkEvent(event);
 				break;
 			}
 		}
@@ -76,6 +109,15 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 		
 		if ( hlEvent instanceof PageChangeEvent ) {
 			controller.goToDeltaPage(((PageChangeEvent) hlEvent).getDelta());
+			this.tabbedPane.getStatusLabel().setCurrentPage(controller.getCurrentPageNumber() + 1);
+		} else if ( hlEvent instanceof GoToBookshelfEvent ) {
+			tabbedPane.setSelectedIndex(0);
+		} else if ( hlEvent instanceof SetBookmarkEvent ) {
+			this.bookmarkPage = controller.getCurrentPageNumber();
+			this.tabbedPane.getStatusLabel().setBookmarkPage(controller.getCurrentPageNumber() + 1);
+		} else if ( hlEvent instanceof GoToBookmarkEvent ) {
+			controller.goToDeltaPage(this.bookmarkPage - controller.getCurrentPageNumber());
+			this.tabbedPane.getStatusLabel().setCurrentPage(controller.getCurrentPageNumber() + 1);
 		}
 
 		return true;

@@ -13,10 +13,7 @@ public class GesturesPdfViewBuilder extends SwingViewBuilder {
 
 	@Override
 	public JToolBar buildCompleteToolBar(boolean embeddableComponent) {
-		return super.buildCompleteToolBar(embeddableComponent);
-//		return null;
+		//return super.buildCompleteToolBar(embeddableComponent);
+		return null;
 	}
-	
-	
-
 }
