@@ -23,7 +23,10 @@ public class HandVuInputThread extends Thread {
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				String line;
 				while ( (line = in.readLine()) != null ) {
-					parser.parseEventString(line);
+					HandVuEvent event = parser.parseEventString(line);
+					if ( event != null ) {
+						
+					}
 				}	
 			}
 		} catch (UnknownHostException e) {
