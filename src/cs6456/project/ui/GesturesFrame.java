@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import cs6456.project.cv.CameraEventDispatcher;
 import cs6456.project.cv.CameraInputThread;
 import cs6456.project.cv.HandRecognitionStateMachine;
+import cs6456.project.cv.HandVuInputThread;
 import cs6456.project.event.GlobalEventDispatcher;
 
 public class GesturesFrame extends JFrame {
@@ -30,7 +31,10 @@ public class GesturesFrame extends JFrame {
 		CameraEventDispatcher dispatcher = new CameraEventDispatcher();
 		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
 
-		cameraThread.start();
+		//cameraThread.start();
+		
+		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045);
+		handVuInputThread.start();
 		
 		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
 

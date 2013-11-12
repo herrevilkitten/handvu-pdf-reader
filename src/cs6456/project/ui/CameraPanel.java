@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
 import cs6456.project.cv.ImageFrameReadEvent;
 import cs6456.project.cv.ImageFrameReadListener;
 import cs6456.project.util.CVUtil;
@@ -24,7 +27,10 @@ public class CameraPanel extends JPanel implements ImageFrameReadListener {
 
 	@Override
 	public void imageFrameRead(ImageFrameReadEvent event) {
-		BufferedImage image = CVUtil.matToBufferedImage(event.getSource());
+		Mat frame = event.getSource();
+		Mat converted = new Mat();
+		frame.convertTo(converted, Imgproc.COLOR_RGB2HSV);
+		BufferedImage image = CVUtil.matToBufferedImage(frame);
 		this.background = image;
 		this.repaint();
 	}
