@@ -26,12 +26,14 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	PdfButton button;
 	JLabel label;
 	GesturesTabbedPane tabbedPane;
+	int index;
 
-	public PdfButtonPanel(final String filename, GesturesTabbedPane tabbedPane) {
+	public PdfButtonPanel(final String filename, GesturesTabbedPane tabbedPane, int index) {
 		this.setLayout(new BorderLayout());
 		this.filename = filename;
-		this.button = new PdfButton("");
+		this.button = new PdfButton("", index);
 		this.tabbedPane = tabbedPane;
+		this.index = index;
 
 		Image adobeImage = ImageUtils.getImage("/Adobe_Acrobat_Icon.jpg");
 		Icon icon = new ImageIcon(adobeImage.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
@@ -68,4 +70,9 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	public void setButton(PdfButton button) {
 		this.button = button;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+	
 }

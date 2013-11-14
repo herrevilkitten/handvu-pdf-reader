@@ -36,10 +36,17 @@ params scaling: start 1.0, stop 8.0, inc_factor 1.2
 params misc: translation_inc_x 2, translation_inc_y 3, post_process 0
 
 7 masks
+all_extended_0_5_10_15_closed_30x20.mask
 Lpalm.mask
 Lback.mask
 sidepoint.mask
 closed.mask
 open.mask
 victory.mask
-all_extended_0_5_10_15_closed_30x20.mask
+Rclosed.mask
+Ropen.mask
+Rpalm.mask
+Rback.mask
+sidepoint.mask
+Rvictory.mask
+Rall_extended_0_5_10_15_closed_30x20.mask

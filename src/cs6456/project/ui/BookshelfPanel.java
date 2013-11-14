@@ -40,6 +40,7 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 		File bookshelfDir = new File("bookshelf");
 
 		if (bookshelfDir.exists()) {
+			int index = 0;
 			for (File file : bookshelfDir.listFiles()) {
 				if (!file.isFile()) {
 					continue;
@@ -50,7 +51,7 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 					continue;
 				}
 
-				PdfButtonPanel buttonPanel = new PdfButtonPanel(filename, tabbedPane);
+				PdfButtonPanel buttonPanel = new PdfButtonPanel(filename, tabbedPane, index++);
 				add(buttonPanel);
 			}
 		}
@@ -124,6 +125,15 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 	
 	public int changeCurrentButton(int delta) {
 		currentButton = Math.max(Math.min(currentButton + delta, (getComponents()).length - 1), 0);
+		this.scrollRectToVisible(getCurrentButtonPanel().getBounds());
+		return currentButton;
+	}
+
+	public int changeCurrentButton(int amount, boolean delta) {
+		if ( delta ) {
+			return changeCurrentButton(amount);
+		}
+		currentButton = Math.max(Math.min(amount, (getComponents()).length - 1), 0);
 		this.scrollRectToVisible(getCurrentButtonPanel().getBounds());
 		return currentButton;
 	}

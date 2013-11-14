@@ -13,7 +13,11 @@ public class Main {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new GesturesFrame();
+				try {
+					new GesturesFrame();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

@@ -6,6 +6,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import cs6456.project.cv.CameraEventDispatcher;
 import cs6456.project.cv.CameraInputThread;
 import cs6456.project.cv.HandRecognitionStateMachine;
+import cs6456.project.cv.HandVuEventDispatcher;
 import cs6456.project.cv.HandVuInputThread;
 import cs6456.project.event.GlobalEventDispatcher;
 
@@ -26,14 +28,16 @@ public class GesturesFrame extends JFrame {
 	StatusLabel statusLabel = new StatusLabel();
 	JLabel gestureLabel = new JLabel("Gesture: ");
 	
-	public GesturesFrame() {
+	HandVuEventDispatcher dispatcher = new HandVuEventDispatcher();
+	
+	public GesturesFrame() throws IOException {
 		setLayout(new BorderLayout());
 		CameraEventDispatcher dispatcher = new CameraEventDispatcher();
 		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
 
 		//cameraThread.start();
 		
-		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045);
+		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045, this.dispatcher);
 		handVuInputThread.start();
 		
 		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
@@ -55,7 +59,6 @@ public class GesturesFrame extends JFrame {
 		add(gestureLabel, BorderLayout.NORTH);
 		add(tabbedPane, BorderLayout.CENTER);
 		add(statusLabel, BorderLayout.SOUTH);
-		setVisible(true);
 		
 		final GlobalEventDispatcher globalEventDispatcher = new GlobalEventDispatcher(tabbedPane);
 
@@ -72,5 +75,18 @@ public class GesturesFrame extends JFrame {
 					}
 				});
 
-	}
+		
+		GesturesGlassPane glassPane = new GesturesGlassPane(globalEventDispatcher, this);
+		this.dispatcher.addListener(glassPane);
+		
+		System.err.println(getGlassPane());
+		setGlassPane(glassPane);
+		glassPane.setVisible(true);
+		System.err.println(getGlassPane());
+
+		//pack();
+		setVisible(true);
+}
+	
+	
 }

@@ -14,9 +14,12 @@ public class PdfButton extends JButton {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private int index;
 
-	public PdfButton(String name) {
+	public PdfButton(String name, int index) {
 		super(name);
+		this.index = index;
 	}
 
 	@Override
@@ -32,4 +35,9 @@ public class PdfButton extends JButton {
 			g2.draw(r);
 		}
 	}
+
+	public int getIndex() {
+		return index;
+	}
+	
 }
