@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -54,15 +55,15 @@ public class GesturesGlassPane extends JPanel implements HandVuEventListener {
 
 	@Override
 	public void handVuEvent(HandVuEvent event) {
-		int width = this.getWidth();
-		int height = this.getHeight() - 40;
+		int width = this.getWidth() / 2;
+		int height = this.getHeight() / 2;
 
 		double xRatio = ((float) (int) (event.getX() * 100)) / 100;
 		double yRatio = ((float) (int) (event.getY() * 100)) / 100;
 		String posture = event.getPosture();
 
-		handX = (width - (int) ((double) width * xRatio));
-		handY = ((int) ((double) height * yRatio)) + 20;
+		handX = (width - (int) ((double) width * xRatio)) * 2 - 30;
+		handY = ((int) ((double) height * yRatio)) * 2 - 2;
 
 		pointerX = handX + 30;
 		pointerY = handY + 2;
@@ -110,9 +111,12 @@ public class GesturesGlassPane extends JPanel implements HandVuEventListener {
 				hoverButton = null;
 				hoverArc = 0;
 			}
+		} else {
+			hoverTime = 0;
+			hoverButton = null;
+			hoverArc = 0;			
 		}
-		// }
-
+	
 		repaint();
 	}
 
@@ -141,18 +145,13 @@ public class GesturesGlassPane extends JPanel implements HandVuEventListener {
 
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setStroke(new BasicStroke(3));
 		g2.setColor(Color.blue);
 		g.drawImage(handImage, handX, handY, null);
 		if (hoverArc > 0) {
 			g.drawArc(pointerX - 16, pointerY - 16, 32, 32, 0, hoverArc);
 		}
-		g2.setColor(Color.red);
-		g2.drawLine(pointerX, pointerY, pointerX, pointerY);
-
-		g2.setStroke(new BasicStroke(1));
-		g2.setColor(Color.green);
-		g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 	}
 
 	public void toggleEnabled() {

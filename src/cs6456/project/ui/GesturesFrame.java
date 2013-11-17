@@ -29,31 +29,20 @@ public class GesturesFrame extends JFrame {
 
 	public GesturesFrame() throws IOException {
 		setLayout(new BorderLayout());
-//		CameraEventDispatcher dispatcher = new CameraEventDispatcher();
-//		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
-
-		// cameraThread.start();
-
 		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045, this.dispatcher);
 		handVuInputThread.start();
 
-//		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
-
 		GesturesTabbedPane tabbedPane = new GesturesTabbedPane(statusLabel);
-//		dispatcher.addImageFrameReadListener(tabbedPane.getCameraPanel());
-//		dispatcher.addImageFrameReadListener(hrsm);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				cameraThread.close();
 				super.windowClosing(e);
 			}
 		});
 		setSize(1000, 1000);
-//		add(gestureLabel, BorderLayout.NORTH);
 		add(tabbedPane, BorderLayout.CENTER);
 		add(statusLabel, BorderLayout.SOUTH);
 
