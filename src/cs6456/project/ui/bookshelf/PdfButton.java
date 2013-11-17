@@ -1,4 +1,4 @@
-package cs6456.project.ui;
+package cs6456.project.ui.bookshelf;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,7 +26,7 @@ public class PdfButton extends JButton {
 	public void paint(Graphics g) {
 		super.paint(g);
 
-		PdfButton current = ((BookshelfPanel) getParent().getParent()).getCurrentButtonPanel().getButton();
+		PdfButton current = ((ScrollingBookshelfPanel) getParent().getParent()).getCurrentButtonPanel().getButton();
 		if (current == this) {
 			Rectangle r = getBounds();
 			Graphics2D g2 = (Graphics2D) g;

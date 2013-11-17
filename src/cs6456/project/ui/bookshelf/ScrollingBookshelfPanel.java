@@ -1,4 +1,4 @@
-package cs6456.project.ui;
+package cs6456.project.ui.bookshelf;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -17,10 +17,9 @@ import org.icepdf.ri.common.SwingController;
 import cs6456.project.event.EventDispatcher;
 import cs6456.project.event.bookshelf.BookSelectionEvent;
 import cs6456.project.event.bookshelf.BookshelfChangeEvent;
-import cs6456.project.ui.bookshelf.PdfButtonPanel;
-import cs6456.project.ui.bookshelf.ThumbnailLoaderThread;
+import cs6456.project.ui.GesturesTabbedPane;
 
-public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollable {
+public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, Scrollable {
 
 	/**
 	 * 
@@ -31,7 +30,7 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 	SwingController controller;
 	GesturesTabbedPane tabbedPane;
 	
-	public BookshelfPanel(SwingController controller, GesturesTabbedPane tabbedPane) {
+	public ScrollingBookshelfPanel(SwingController controller, GesturesTabbedPane tabbedPane) {
 		this.controller = controller;
 		this.tabbedPane = tabbedPane;
 		
@@ -137,23 +136,28 @@ public class BookshelfPanel extends JPanel implements EventDispatcher, Scrollabl
 		this.scrollRectToVisible(getCurrentButtonPanel().getBounds());
 		return currentButton;
 	}
-
+	
+	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
 
+	@Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 		return 10;
 	}
 
+	@Override
 	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
 		return ((orientation == SwingConstants.VERTICAL) ? visibleRect.height : visibleRect.width) - 10;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		return true;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}

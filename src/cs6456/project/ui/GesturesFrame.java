@@ -11,9 +11,6 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import cs6456.project.cv.CameraEventDispatcher;
-import cs6456.project.cv.CameraInputThread;
-import cs6456.project.cv.HandRecognitionStateMachine;
 import cs6456.project.cv.HandVuEventDispatcher;
 import cs6456.project.cv.HandVuInputThread;
 import cs6456.project.event.GlobalEventDispatcher;
@@ -27,66 +24,66 @@ public class GesturesFrame extends JFrame {
 
 	StatusLabel statusLabel = new StatusLabel();
 	JLabel gestureLabel = new JLabel("Gesture: ");
-	
+
 	HandVuEventDispatcher dispatcher = new HandVuEventDispatcher();
-	
+
 	public GesturesFrame() throws IOException {
 		setLayout(new BorderLayout());
-		CameraEventDispatcher dispatcher = new CameraEventDispatcher();
-		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
+//		CameraEventDispatcher dispatcher = new CameraEventDispatcher();
+//		final CameraInputThread cameraThread = new CameraInputThread(dispatcher, 60);
 
-		//cameraThread.start();
-		
+		// cameraThread.start();
+
 		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045, this.dispatcher);
 		handVuInputThread.start();
-		
-		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
+
+//		HandRecognitionStateMachine hrsm = new HandRecognitionStateMachine();
 
 		GesturesTabbedPane tabbedPane = new GesturesTabbedPane(statusLabel);
-		dispatcher.addImageFrameReadListener(tabbedPane.getCameraPanel());
-		dispatcher.addImageFrameReadListener(hrsm);
+//		dispatcher.addImageFrameReadListener(tabbedPane.getCameraPanel());
+//		dispatcher.addImageFrameReadListener(hrsm);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				cameraThread.close();
+//				cameraThread.close();
 				super.windowClosing(e);
 			}
 		});
-		setSize(750, 1000);
-		add(gestureLabel, BorderLayout.NORTH);
+		setSize(1000, 1000);
+//		add(gestureLabel, BorderLayout.NORTH);
 		add(tabbedPane, BorderLayout.CENTER);
 		add(statusLabel, BorderLayout.SOUTH);
-		
+
 		final GlobalEventDispatcher globalEventDispatcher = new GlobalEventDispatcher(tabbedPane);
+
+		final GesturesGlassPane glassPane = new GesturesGlassPane(this);
+		this.dispatcher.addListener(glassPane);
+
+		setGlassPane(glassPane);
+		glassPane.setVisible(true);
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
 				new KeyEventDispatcher() {
 					@Override
 					public boolean dispatchKeyEvent(KeyEvent e) {
-						if ( e.getID() == KeyEvent.KEY_PRESSED ) {
-							System.err.println("Global key event: " + e.getKeyCode() + " "
-									+ KeyEvent.getKeyText(e.getKeyCode()));
-							return globalEventDispatcher.dispatchEvent(e);							
+						if (e.getID() == KeyEvent.KEY_PRESSED) {
+							if (e.getKeyCode() == KeyEvent.VK_T) {
+								glassPane.toggleEnabled();
+							} else {
+								System.err.println("Global key event: " + e.getKeyCode() + " "
+										+ KeyEvent.getKeyText(e.getKeyCode()));
+								return globalEventDispatcher.dispatchEvent(e);
+							}
 						}
 						return false;
 					}
 				});
 
-		
-		GesturesGlassPane glassPane = new GesturesGlassPane(globalEventDispatcher, this);
-		this.dispatcher.addListener(glassPane);
-		
-		System.err.println(getGlassPane());
-		setGlassPane(glassPane);
-		glassPane.setVisible(true);
-		System.err.println(getGlassPane());
-
-		//pack();
+		// pack();
 		setVisible(true);
-}
-	
-	
+	}
+
 }

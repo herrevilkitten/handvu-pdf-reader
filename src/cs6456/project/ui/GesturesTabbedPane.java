@@ -3,6 +3,10 @@ package cs6456.project.ui;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import cs6456.project.ui.bookshelf.BookshelfPanel;
+import cs6456.project.ui.camera.CameraPanel;
+import cs6456.project.ui.pdf.PdfReaderPanel;
+
 public class GesturesTabbedPane extends JTabbedPane {
 
 	/**
@@ -20,11 +24,11 @@ public class GesturesTabbedPane extends JTabbedPane {
 		
 		pdfReaderPanel = new PdfReaderPanel(this);
 		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController(), this);
-		cameraPanel = new CameraPanel();
+//		cameraPanel = new CameraPanel();
 		
 		this.addTab("Shelf", new JScrollPane(bookshelfPanel));
-		this.addTab("Book", pdfReaderPanel);
-		this.addTab("Camera", cameraPanel);
+		this.addTab("Reader", pdfReaderPanel);
+//		this.addTab("Camera", cameraPanel);
 	}
 
 	public BookshelfPanel getBookshelfPanel() {

@@ -10,9 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import cs6456.project.ui.BookshelfPanel;
 import cs6456.project.ui.GesturesTabbedPane;
-import cs6456.project.ui.PdfButton;
 import cs6456.project.util.ImageUtils;
 
 public class PdfButtonPanel extends JPanel implements ActionListener {
@@ -50,7 +48,7 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		tabbedPane.getPdfReaderPanel().openDocument("bookshelf/" + filename);
-		((BookshelfPanel) getParent()).setCurrentButton(this);
+		((ScrollingBookshelfPanel) getParent()).setCurrentButton(this);
 		repaint();
 		tabbedPane.setSelectedIndex(1);
 	}

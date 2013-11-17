@@ -1,4 +1,4 @@
-package cs6456.project.ui;
+package cs6456.project.ui.camera;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

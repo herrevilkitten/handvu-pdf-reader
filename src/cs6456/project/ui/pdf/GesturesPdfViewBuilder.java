@@ -1,5 +1,6 @@
-package cs6456.project.pdf;
+package cs6456.project.ui.pdf;
 
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.icepdf.ri.common.SwingController;
@@ -13,7 +14,12 @@ public class GesturesPdfViewBuilder extends SwingViewBuilder {
 
 	@Override
 	public JToolBar buildCompleteToolBar(boolean embeddableComponent) {
-		//return super.buildCompleteToolBar(embeddableComponent);
 		return null;
 	}
+
+	@Override
+	public JPanel buildStatusPanel() {
+		return null;
+	}
+	
 }
