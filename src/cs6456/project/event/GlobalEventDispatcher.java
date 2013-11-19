@@ -6,6 +6,9 @@ import java.util.EventObject;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/*
+ * GlobalEventDispatcher determines which tab will accept the dispatched events and passes the event along
+ */
 public class GlobalEventDispatcher implements EventDispatcher {
 	JTabbedPane pane = null;
 

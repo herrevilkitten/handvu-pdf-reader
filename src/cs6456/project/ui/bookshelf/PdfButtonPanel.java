@@ -20,6 +20,11 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * A PdfButtonPanel is
+	 * - A button with an icon
+	 * - A label (the filename)
+	 */
 	String filename;
 	PdfButton button;
 	JLabel label;
@@ -33,6 +38,9 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 		this.tabbedPane = tabbedPane;
 		this.index = index;
 
+		/*
+		 * The default icon is a rescaled "Adobe Acrobat" icon
+		 */
 		Image adobeImage = ImageUtils.getImage("/Adobe_Acrobat_Icon.jpg");
 		Icon icon = new ImageIcon(adobeImage.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 
@@ -47,6 +55,13 @@ public class PdfButtonPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		/*
+		 * When the button is "clicked", either with mouse, keyboard, or hover:
+		 * - Open the PDF document in the Reader tab
+		 * - Set the currently selected button to this button
+		 * - Repaint
+		 * - Switch tabs to the Reader tab
+		 */
 		tabbedPane.getPdfReaderPanel().openDocument("bookshelf/" + filename);
 		((ScrollingBookshelfPanel) getParent()).setCurrentButton(this);
 		repaint();

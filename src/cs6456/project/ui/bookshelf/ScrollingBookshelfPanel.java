@@ -18,7 +18,12 @@ import cs6456.project.event.EventDispatcher;
 import cs6456.project.event.bookshelf.BookSelectionEvent;
 import cs6456.project.event.bookshelf.BookshelfChangeEvent;
 import cs6456.project.ui.GesturesTabbedPane;
+import cs6456.project.ui.UiState;
 
+/*
+ * This class loads and keeps track of the Bookshelf contents, as well as handling the viewport state
+ * (via Scrollable)
+ */
 public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, Scrollable {
 
 	/**
@@ -34,8 +39,14 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 		this.controller = controller;
 		this.tabbedPane = tabbedPane;
 		
-		setLayout(new GridLayout(0, 4));
+		/*
+		 * We can display 4 documents horizontally, and unlimited vertically
+		 */
+		setLayout(new GridLayout(0, UiState.BOOKSHELF_SHELF_SIZE));
 
+		/*
+		 * Open the "bookshelf" directory and scan it for files ending with ".pdf"
+		 */
 		File bookshelfDir = new File("bookshelf");
 
 		if (bookshelfDir.exists()) {
@@ -50,15 +61,24 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 					continue;
 				}
 
+				/*
+				 * Create a button for each file and add the button to the panel 
+				 */
 				PdfButtonPanel buttonPanel = new PdfButtonPanel(filename, tabbedPane, index++);
 				add(buttonPanel);
 			}
 		}
 
+		/*
+		 * Create and start the ThumbnailLoaderThread
+		 */
 		ThumbnailLoaderThread thread = new ThumbnailLoaderThread(this);
 		thread.start();
 	}
 	
+	/*
+	 * Set the current button to the given PdfButtonPanel
+	 */
 	public void setCurrentButton(PdfButtonPanel panel) {
 		int index = 0;
 		for ( Component c : getComponents() ) {
@@ -81,32 +101,57 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 			KeyEvent ke = (KeyEvent) event;
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
+				/*
+				 * Move left one book
+				 */
 				hlEvent = new BookshelfChangeEvent(event, -1);
 				break;
 			case KeyEvent.VK_RIGHT:
+				/*
+				 * Move right one book
+				 */
 				hlEvent = new BookshelfChangeEvent(event, 1);
 				break;
 			case KeyEvent.VK_DOWN:
-				hlEvent = new BookshelfChangeEvent(event, 4);
+				/*
+				 * Move down one book/right four books
+				 */
+				hlEvent = new BookshelfChangeEvent(event, UiState.BOOKSHELF_SHELF_SIZE);
 				break;
 			case KeyEvent.VK_UP:
-				hlEvent = new BookshelfChangeEvent(event, -4);
+				/*
+				 * Move up one book/left four books
+				 */
+				hlEvent = new BookshelfChangeEvent(event, -UiState.BOOKSHELF_SHELF_SIZE);
 				break;
 			case KeyEvent.VK_ENTER:
+				/*
+				 * Select the book
+				 */
 				hlEvent = new BookSelectionEvent(event);
 				break;
 			}
 		}
 		
+		/*
+		 * If we have not matched a high-level event, then return
+		 */
 		if ( hlEvent == null ) {
 			return false;
 		}
 		
 		if ( hlEvent instanceof BookshelfChangeEvent ) {
+			/*
+			 * If it is a BookshelfChangeEvent, then change the currently selected button
+			 * and repaint
+			 */
 			BookshelfChangeEvent bce = (BookshelfChangeEvent) hlEvent;
 			changeCurrentButton(bce.getAmount());
 			repaint();
 		} else if ( hlEvent instanceof BookSelectionEvent ) {
+			/*
+			 * Open the document by "clicking" on the button
+			 */
 			getCurrentButtonPanel().getButton().doClick();
 		}
 		return true;
@@ -121,12 +166,23 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 		return Math.max(Math.min(currentButton, (getComponents()).length - 1), 0);
 	}
 	
+	/*
+	 * Change the currently selected button by the amount given.
+	 * 
+	 * Scroll to make sure the selected button is visible.
+	 */
 	public int changeCurrentButton(int delta) {
 		currentButton = Math.max(Math.min(currentButton + delta, (getComponents()).length - 1), 0);
 		this.scrollRectToVisible(getCurrentButtonPanel().getBounds());
 		return currentButton;
 	}
 
+	/*
+	 * Change the currently selected button to either the absolute value or by
+	 * the amount given.
+	 * 
+	 * Scroll to make sure the selected button is visible.
+	 */
 	public int changeCurrentButton(int amount, boolean delta) {
 		if ( delta ) {
 			return changeCurrentButton(amount);
@@ -136,6 +192,13 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 		return currentButton;
 	}
 	
+	/*
+	 * These methods implement the Scrollable interface, so the bookshelf panel acts
+	 * as a viewport.
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
+	 */
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();

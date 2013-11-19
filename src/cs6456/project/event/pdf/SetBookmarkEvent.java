@@ -2,6 +2,9 @@ package cs6456.project.event.pdf;
 
 import java.util.EventObject;
 
+/*
+ * Indicates that the user wishes to set a bookmark
+ */
 public class SetBookmarkEvent extends EventObject {
 
 	/**

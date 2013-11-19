@@ -18,6 +18,9 @@ public class StatusLabel extends JLabel {
 		updateLabel();
 	}
 
+	/*
+	 * Whenever the label state changes, then update the label text and cause a repaint
+	 */
 	private void updateLabel() {
 		StringBuilder label = new StringBuilder();
 

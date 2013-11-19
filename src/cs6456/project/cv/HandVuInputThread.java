@@ -6,6 +6,12 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/*
+ * This thread connects to the HandVu Server and listens to the events it emits.
+ * HandVu emits one event per line, which is then parsed into a HandVuEvent
+ * If the string is parsed into an object, then it will be sent to the
+ * HandVuEventDispatcher
+ */
 public class HandVuInputThread extends Thread {
 	int port;
 	HandVuEventDispatcher dispatcher;

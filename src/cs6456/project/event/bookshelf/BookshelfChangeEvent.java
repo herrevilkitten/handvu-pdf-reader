@@ -2,6 +2,9 @@ package cs6456.project.event.bookshelf;
 
 import java.util.EventObject;
 
+/*
+ * This event indicates that the selected bookshelf entry has changed
+ */
 public class BookshelfChangeEvent extends EventObject {
 
 	/**

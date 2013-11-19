@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UiState {
+	// The button size for all of the border gesture controls
 	final static public int BUTTON_SIZE = 96;
+	
+	// The number of documents to display per row in the bookshelf
+	final static public int BOOKSHELF_SHELF_SIZE = 4;
 
 	List<UiStateObserver> observers = new ArrayList<UiStateObserver>();
 
+	// is the UI locked?
 	boolean locked = false;
-	String message = "";
 
 	public boolean isLocked() {
 		return locked;
@@ -17,15 +21,6 @@ public class UiState {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
-		observe();
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 		observe();
 	}
 

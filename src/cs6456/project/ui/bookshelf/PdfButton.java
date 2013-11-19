@@ -26,6 +26,11 @@ public class PdfButton extends JButton {
 	public void paint(Graphics g) {
 		super.paint(g);
 
+		/*
+		 * A rather convoluted way to draw a blue border around the currently selected element.
+		 * I put it in here so that the parents (two levels up) don't need to know the
+		 * geometry of the viewport items
+		 */
 		PdfButton current = ((ScrollingBookshelfPanel) getParent().getParent()).getCurrentButtonPanel().getButton();
 		if (current == this) {
 			Rectangle r = getBounds();

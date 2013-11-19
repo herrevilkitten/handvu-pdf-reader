@@ -3,6 +3,10 @@ package cs6456.project.cv;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+ * Parses a "HandVu Gesture Event" into a HandVuEvent object
+ * Returns null if it cannot be parsed.
+ */
 public class HandVuEventParser {
 	final static private Pattern EVENT_PATTERN = Pattern
 			.compile("^.*1\\.2\\s+(\\d+)\\s+0:\\s+(\\d),\\s+(\\d),\\s+\"(.*)\"\\s+\\(([0-9.]+),\\s+([0-9.]+)\\).*$");

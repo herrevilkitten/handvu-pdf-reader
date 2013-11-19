@@ -2,6 +2,9 @@ package cs6456.project.event.pdf;
 
 import java.util.EventObject;
 
+/*
+ * Indicates the user is going to a previously set bookmark
+ */
 public class GoToBookmarkEvent extends EventObject {
 
 	/**

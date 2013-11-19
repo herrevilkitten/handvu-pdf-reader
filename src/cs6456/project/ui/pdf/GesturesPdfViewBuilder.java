@@ -6,6 +6,11 @@ import javax.swing.JToolBar;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
 
+/*
+ * Extend SwingViewBuilder
+ * This class returns "null" for a number of methods, in order to prevent these UI elements from
+ * being rendered.
+ */
 public class GesturesPdfViewBuilder extends SwingViewBuilder {
 
 	public GesturesPdfViewBuilder(SwingController c) {

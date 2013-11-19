@@ -4,7 +4,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import cs6456.project.ui.bookshelf.BookshelfPanel;
-import cs6456.project.ui.camera.CameraPanel;
 import cs6456.project.ui.pdf.PdfReaderPanel;
 
 public class GesturesTabbedPane extends JTabbedPane {
@@ -16,7 +15,6 @@ public class GesturesTabbedPane extends JTabbedPane {
 
 	BookshelfPanel bookshelfPanel;
 	PdfReaderPanel pdfReaderPanel;
-	CameraPanel cameraPanel;
 	StatusLabel statusLabel;
 	UiState uiState;
 
@@ -37,10 +35,6 @@ public class GesturesTabbedPane extends JTabbedPane {
 
 	public PdfReaderPanel getPdfReaderPanel() {
 		return pdfReaderPanel;
-	}
-
-	public CameraPanel getCameraPanel() {
-		return cameraPanel;
 	}
 
 	public StatusLabel getStatusLabel() {

@@ -1,5 +1,9 @@
 package cs6456.project.cv;
 
+/*
+ * This is a HandVu Gesture Event.  This format is documented here:
+ * http://www.movesinstitute.org/~kolsch/HandVu/doc/GestureEventFormat.pdf
+ */
 public class HandVuEvent {
 	long timestamp;
 	boolean tracking;

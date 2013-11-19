@@ -2,6 +2,9 @@ package cs6456.project.event.pdf;
 
 import java.util.EventObject;
 
+/*
+ * Indicates that the user desires to return to the bookshelf view
+ */
 public class GoToBookshelfEvent extends EventObject {
 
 	/**
