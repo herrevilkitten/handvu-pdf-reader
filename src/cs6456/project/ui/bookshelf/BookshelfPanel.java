@@ -16,6 +16,7 @@ import camick.swing.icon.RotatedIcon.Rotate;
 import camick.swing.icon.TextIcon;
 import cs6456.project.event.EventDispatcher;
 import cs6456.project.ui.GesturesTabbedPane;
+import cs6456.project.ui.UiState;
 
 public class BookshelfPanel extends JPanel implements EventDispatcher {
 
@@ -26,11 +27,13 @@ public class BookshelfPanel extends JPanel implements EventDispatcher {
 
 	ScrollingBookshelfPanel scrolling;
 	GesturesTabbedPane tabbedPane;
-	final static private int BUTTON_SIZE = 64;
+	UiState uiState;
+	final static private int BUTTON_SIZE = 96;
 
-	public BookshelfPanel(SwingController controller, final GesturesTabbedPane tabbedPane) {
+	public BookshelfPanel(SwingController controller, final GesturesTabbedPane tabbedPane, final UiState uiState) {
 		this.scrolling = new ScrollingBookshelfPanel(controller, tabbedPane);
 		this.tabbedPane = tabbedPane;
+		this.uiState = uiState;
 		SpringLayout layout = new SpringLayout();
 		setLayout(layout);
 
@@ -40,11 +43,14 @@ public class BookshelfPanel extends JPanel implements EventDispatcher {
 		final JButton downButton = new JButton("Down");
 		final JButton readerButton = new JButton("");
 		readerButton.setIcon(new RotatedIcon(new TextIcon(readerButton, "Reader"), Rotate.DOWN));
+		final JButton lockButton = new JButton("");
+		lockButton.setIcon(new RotatedIcon(new TextIcon(lockButton, "Lock")));
 
 		add(viewport);
 		add(upButton);
 		add(downButton);
 		add(readerButton);
+		add(lockButton);
 
 		// Attach the Up button to the panel
 		layout.putConstraint(SpringLayout.WEST, upButton, BUTTON_SIZE, SpringLayout.WEST, this);
@@ -63,6 +69,12 @@ public class BookshelfPanel extends JPanel implements EventDispatcher {
 		layout.putConstraint(SpringLayout.SOUTH, readerButton, -BUTTON_SIZE, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, readerButton, 0, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, readerButton, -BUTTON_SIZE, SpringLayout.EAST, this);
+		
+		// Attach the Lock button to the panel
+		layout.putConstraint(SpringLayout.NORTH, lockButton, 500 - (BUTTON_SIZE / 2), SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, lockButton, -BUTTON_SIZE, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, lockButton, BUTTON_SIZE, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.WEST, lockButton, 0, SpringLayout.WEST, this);
 
 		// Attach the bookshelf to the buttons
 		layout.putConstraint(SpringLayout.NORTH, viewport, 0, SpringLayout.SOUTH, upButton);
@@ -88,6 +100,13 @@ public class BookshelfPanel extends JPanel implements EventDispatcher {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
+			}
+		});
+		
+		lockButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				uiState.setLocked(true);
 			}
 		});
 	}

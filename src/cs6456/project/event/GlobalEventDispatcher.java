@@ -16,14 +16,12 @@ public class GlobalEventDispatcher implements EventDispatcher {
 	@Override
 	public boolean dispatchEvent(EventObject event) {
 		Component component = pane.getSelectedComponent();
-		System.err.println("Dispatching " + event.getClass().getSimpleName());
 		if (component != null) {
 			if ( component instanceof JScrollPane ) {
 				component = ((JScrollPane) component).getViewport().getView();
 			}
 
 			if (component instanceof EventDispatcher) {
-				System.err.println("... to " + component.getClass().getSimpleName());
 				return ((EventDispatcher) component).dispatchEvent(event);
 			}
 		}

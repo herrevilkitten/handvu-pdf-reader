@@ -1,5 +1,6 @@
 package cs6456.project.ui.pdf;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,7 +20,9 @@ import cs6456.project.event.pdf.GoToBookmarkEvent;
 import cs6456.project.event.pdf.GoToBookshelfEvent;
 import cs6456.project.event.pdf.PageChangeEvent;
 import cs6456.project.event.pdf.SetBookmarkEvent;
+import cs6456.project.ui.GesturesGlassPane;
 import cs6456.project.ui.GesturesTabbedPane;
+import cs6456.project.ui.UiState;
 
 public class PdfReaderPanel extends JPanel implements cs6456.project.event.EventDispatcher {
 
@@ -27,20 +30,22 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	final static private int BUTTON_SIZE = 64;
+	final static private int BUTTON_SIZE = 96;
 
 	SwingController controller;
 	SwingViewBuilder factory;
 	JPanel viewerComponentPanel;
 	GesturesTabbedPane tabbedPane;
+	UiState uiState;
 
 	int bookmarkPage = 0;
 	int currentPage = 0;
 
-	public PdfReaderPanel(GesturesTabbedPane tabbedPane) {
+	public PdfReaderPanel(GesturesTabbedPane tabbedPane, final UiState uiState) {
 		SpringLayout layout = new SpringLayout();
 		setLayout(layout);
 		this.tabbedPane = tabbedPane;
+		this.uiState = uiState;
 
 		// build a component controller
 		controller = new SwingController();
@@ -57,6 +62,8 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 		setBookmarkButton.setIcon(new RotatedIcon(new TextIcon(setBookmarkButton, "Bookmark"), Rotate.DOWN));
 		final JButton gotoBookmarkButton = new JButton("");
 		gotoBookmarkButton.setIcon(new RotatedIcon(new TextIcon(gotoBookmarkButton, "Goto"), Rotate.DOWN));
+		final JButton lockButton = new JButton("");
+		lockButton.setIcon(new RotatedIcon(new TextIcon(lockButton, "Lock")));
 
 		add(viewerComponentPanel);
 		add(upButton);
@@ -64,6 +71,7 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 		add(bookshelfButton);
 		add(setBookmarkButton);
 		add(gotoBookmarkButton);
+		add(lockButton);
 
 		// Attach the Up button to the panel
 		layout.putConstraint(SpringLayout.WEST, upButton, BUTTON_SIZE, SpringLayout.WEST, this);
@@ -79,19 +87,19 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 
 		// Attach the Bookshelf button to the panel
 		layout.putConstraint(SpringLayout.NORTH, bookshelfButton, BUTTON_SIZE, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, bookshelfButton, -BUTTON_SIZE, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, bookshelfButton, -(500 - BUTTON_SIZE / 2), SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.WEST, bookshelfButton, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.EAST, bookshelfButton, BUTTON_SIZE, SpringLayout.WEST, this);
 
 		// Attach the Set Bookmark button to the panel
 		layout.putConstraint(SpringLayout.NORTH, setBookmarkButton, BUTTON_SIZE, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, setBookmarkButton, -(500 - BUTTON_SIZE), SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, setBookmarkButton, -(500 - BUTTON_SIZE / 2), SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, setBookmarkButton, 0, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, setBookmarkButton, -BUTTON_SIZE, SpringLayout.EAST, this);
 
 		// Attach the Goto Bookmark button to the panel
 		layout.putConstraint(SpringLayout.SOUTH, gotoBookmarkButton, -BUTTON_SIZE, SpringLayout.SOUTH, this);
-		layout.putConstraint(SpringLayout.NORTH, gotoBookmarkButton, (500 - BUTTON_SIZE), SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.NORTH, gotoBookmarkButton, (500 - BUTTON_SIZE / 2), SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.EAST, gotoBookmarkButton, 0, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, gotoBookmarkButton, -BUTTON_SIZE, SpringLayout.EAST, this);
 
@@ -101,6 +109,19 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 		layout.putConstraint(SpringLayout.WEST, viewerComponentPanel, 0, SpringLayout.EAST, bookshelfButton);
 		layout.putConstraint(SpringLayout.EAST, viewerComponentPanel, 0, SpringLayout.WEST, setBookmarkButton);
 
+		// Attach the Lock button to the panel
+		layout.putConstraint(SpringLayout.NORTH, lockButton, 500 - (BUTTON_SIZE / 2), SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, lockButton, -BUTTON_SIZE, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, lockButton, BUTTON_SIZE, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.WEST, lockButton, 0, SpringLayout.WEST, this);
+
+		lockButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				uiState.setLocked(true);
+			}
+		});
+		
 		// add interactive mouse link annotation support via callback
 		controller.getDocumentViewController().setAnnotationCallback(
 				new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
@@ -153,11 +174,11 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 		this.tabbedPane.getStatusLabel().setDocument(document);
 		this.tabbedPane.getStatusLabel().setCurrentPage(1);
 		this.tabbedPane.getStatusLabel().setLastPage(controller.getDocument().getNumberOfPages());
+		this.tabbedPane.getStatusLabel().repaint();
 	}
 
 	@Override
 	public boolean dispatchEvent(EventObject event) {
-		System.err.println(getClass().getSimpleName() + " handling " + event);
 		EventObject hlEvent = null;
 		/*
 		 * Translate the low-level events (keyboard, gesture) into high level PDF
@@ -220,6 +241,10 @@ public class PdfReaderPanel extends JPanel implements cs6456.project.event.Event
 	protected void setBookmark() {
 		this.bookmarkPage = controller.getCurrentPageNumber();
 		this.tabbedPane.getStatusLabel().setBookmarkPage(controller.getCurrentPageNumber() + 1);
+		Component glassPane = this.getRootPane().getGlassPane();
+		if ( glassPane instanceof GesturesGlassPane ) {
+			((GesturesGlassPane) glassPane).showPopup("Bookmark set to page " + (controller.getCurrentPageNumber() + 1));
+		}
 	}
 
 	protected void goToBookmark() {

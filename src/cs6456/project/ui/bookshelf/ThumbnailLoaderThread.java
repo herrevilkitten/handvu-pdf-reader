@@ -33,7 +33,6 @@ public class ThumbnailLoaderThread extends Thread {
 			PdfButtonPanel panel = (PdfButtonPanel) c;
 			String filename = panel.getFilename();
 
-			System.err.println("Loading thumbnail for bookshelf/" + filename);
 			Document pdf = new Document();
 			try {
 				pdf.setFile("bookshelf/" + filename);

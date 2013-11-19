@@ -18,17 +18,17 @@ public class GesturesTabbedPane extends JTabbedPane {
 	PdfReaderPanel pdfReaderPanel;
 	CameraPanel cameraPanel;
 	StatusLabel statusLabel;
+	UiState uiState;
 
-	public GesturesTabbedPane(StatusLabel statusLabel) {
+	public GesturesTabbedPane(StatusLabel statusLabel, UiState uiState) {
 		this.statusLabel = statusLabel;
 		
-		pdfReaderPanel = new PdfReaderPanel(this);
-		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController(), this);
-//		cameraPanel = new CameraPanel();
+		pdfReaderPanel = new PdfReaderPanel(this, uiState);
+		bookshelfPanel = new BookshelfPanel(pdfReaderPanel.getController(), this, uiState);
+		this.uiState = uiState;
 		
 		this.addTab("Shelf", new JScrollPane(bookshelfPanel));
 		this.addTab("Reader", pdfReaderPanel);
-//		this.addTab("Camera", cameraPanel);
 	}
 
 	public BookshelfPanel getBookshelfPanel() {

@@ -40,7 +40,6 @@ public class ImageUtils {
 	}
 	
 	public static BufferedImage getBufferedImage(String path) throws IOException {
-		System.err.println(path);
 		URL url = ImageUtils.class.getResource(path);
 		return ImageIO.read(url);
 	}

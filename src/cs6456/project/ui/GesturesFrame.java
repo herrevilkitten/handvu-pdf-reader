@@ -31,8 +31,10 @@ public class GesturesFrame extends JFrame {
 		setLayout(new BorderLayout());
 		final HandVuInputThread handVuInputThread = new HandVuInputThread(7045, this.dispatcher);
 		handVuInputThread.start();
+		
+		UiState uiState = new UiState();
 
-		GesturesTabbedPane tabbedPane = new GesturesTabbedPane(statusLabel);
+		GesturesTabbedPane tabbedPane = new GesturesTabbedPane(statusLabel, uiState);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -48,7 +50,7 @@ public class GesturesFrame extends JFrame {
 
 		final GlobalEventDispatcher globalEventDispatcher = new GlobalEventDispatcher(tabbedPane);
 
-		final GesturesGlassPane glassPane = new GesturesGlassPane(this);
+		final GesturesGlassPane glassPane = new GesturesGlassPane(this, uiState);
 		this.dispatcher.addListener(glassPane);
 
 		setGlassPane(glassPane);
@@ -62,8 +64,6 @@ public class GesturesFrame extends JFrame {
 							if (e.getKeyCode() == KeyEvent.VK_T) {
 								glassPane.toggleEnabled();
 							} else {
-								System.err.println("Global key event: " + e.getKeyCode() + " "
-										+ KeyEvent.getKeyText(e.getKeyCode()));
 								return globalEventDispatcher.dispatchEvent(e);
 							}
 						}

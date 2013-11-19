@@ -73,7 +73,6 @@ public class ScrollingBookshelfPanel extends JPanel implements EventDispatcher, 
 
 	@Override
 	public boolean dispatchEvent(EventObject event) {
-		System.err.println(getClass().getSimpleName() + " handling " + event);
 		EventObject hlEvent = null;
 		/*
 		 * Translate the low-level events (keyboard, gesture) into high level PDF events
